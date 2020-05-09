@@ -1,6 +1,5 @@
 #!/bin/sh -e
 
-patch -p1 < invalid_tls_model.patch
 cd gcc
 patch -Np1 < ../gcc-6.1-musl-libssp.patch
 cd - > /dev/null
@@ -21,6 +20,9 @@ export libat_cv_have_ifunc=no
 
 ../gcc/configure \
     --prefix=/usr \
+    --libexecdir=/usr/lib \
+    --mandir=/usr/share/man \
+    --infodir=/usr/share/info \
     --disable-multilib \
     --disable-symvers \
     --disable-libmpx \
@@ -30,11 +32,7 @@ export libat_cv_have_ifunc=no
     --disable-fixed-point \
     --disable-libstdcxx-pch \
     --disable-nls \
-    --without-included-gettext \
     --enable-checking=release \
-    --mandir=/usr/share/man \
-    --infodir=/usr/share/info \
-    --with-system-zlib \
     --enable-__cxa_atexit \
     --enable-default-pie \
     --enable-default-ssp \
@@ -42,6 +40,8 @@ export libat_cv_have_ifunc=no
     --enable-threads \
     --enable-tls \
     --enable-languages=c,c++ \
+    --without-included-gettext \
+    --with-system-zlib \
     --build=i686-pc-linux-musl \
     --disable-bootstrap \
     --disable-libssp
@@ -64,7 +64,6 @@ install -Dm755 ../c99 "$1/usr/bin/c99"
 {
     mkdir -p "$1/usr/lib/bfd-plugins"
 
-    ln -s /usr/libexec/gcc/i686-pc-linux-musl/9.3.0/liblto_plugin.so \
+    ln -s /usr/lib/gcc/i686-pc-linux-musl/10.1.0/liblto_plugin.so \
           "$1/usr/lib/bfd-plugins/liblto_plugin.so"
 }
-
