@@ -10,6 +10,7 @@ export PATH=$PATH:$PWD
 
 ./configure \
     --prefix=/usr \
+    --with-lib-path=/usr/lib:/usr/local/lib \
     --build=i686-pc-linux-musl \
     --host=i686-pc-linux-musl \
     --enable-targets=x86_64-pep \
@@ -27,5 +28,6 @@ export PATH=$PATH:$PWD
     --with-mmap \
     --with-system-zlib
 
-make
-make DESTDIR="$1" install
+make configure-host
+make tooldir=/usr
+make prefix="$1/usr" tooldir="$1/usr" install
