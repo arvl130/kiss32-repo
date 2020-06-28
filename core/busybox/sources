@@ -1,7 +1,4 @@
-https://busybox.net/downloads/busybox-1.31.1.tar.bz2
-patches/0001-date-Use-64-prefix-syscall-if-we-have-to.patch
-patches/0001-time-Use-64-prefix-syscall-if-we-have-to.patch
-patches/0002-Remove-syscall-wrappers-around-clock_gettime-closes-.patch
+https://busybox.net/downloads/busybox-1.32.0.tar.bz2
 patches/adduser-no-setgid.patch
 patches/fsck-resolve-uuid.patch
 patches/modprobe-kernel-version.patch
