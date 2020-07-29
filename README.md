@@ -1,4 +1,4 @@
-# 💋[KISS Linux](https://k1ss.org/) for i686
+# 💋 [KISS Linux](https://k1ss.org/) for i686
 
 This is a repository containing an unofficial port of KISS Linux to the i686 architecture.
 
