@@ -1,0 +1,22 @@
+#!/bin/sh -e
+
+# Fix PIC definitions
+sed -i -e 's:PIC:__PIC__:' \
+    mpi/i386/mpih-add1.S \
+    mpi/i386/mpih-sub1.S \
+    intl/relocatable.c
+
+# Fix build fail with GCC 10.
+export CFLAGS="$CFLAGS -fcommon"
+
+./configure \
+    --build=i686-pc-linux-musl \
+    --host=i686-pc-linux-musl \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir=/usr/lib \
+    --enable-noexecstack \
+    --disable-nls
+
+make
+make DESTDIR="$1" install
