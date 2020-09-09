@@ -10,9 +10,8 @@ make DESTDIR="$1" install
 mkdir -p "$1/usr/bin"
 ln -s /usr/lib/ld-musl-i386.so.1 "$1/usr/bin/ldd"
 
-cd "$1/usr/lib"
-ln -s libc.so libc.musl-x86.so.1
-cd - > /dev/null
+# Fix incorrect symlink to libc.so.
+ln -sf libc.so "$1/usr/lib/libc.musl-x86.so.1"
 
 # Install BSD compatibility headers.
 install -Dm 755 cdefs.h "$1/usr/include/sys/cdefs.h"
