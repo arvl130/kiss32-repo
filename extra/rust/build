@@ -1,0 +1,61 @@
+#!/bin/sh -e
+
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
+
+# 'rust' checksums files in 'vendor/', but we patch a few.
+for vendor in libc openssl-sys; do
+    sed -i 's/\("files":{\)[^}]*/\1/' "vendor/$vendor/.cargo-checksum.json"
+done
+
+cat > config.toml <<EOF
+[llvm]
+link-shared = true
+
+[build]
+build  = "i686-unknown-linux-musl"
+host   = [ "i686-unknown-linux-musl" ]
+target = [ "i686-unknown-linux-musl" ]
+
+cargo          = "$PWD/bin/cargo"
+rustc          = "$PWD/bin/rustc"
+docs           = false
+compiler-docs  = false
+extended       = true
+submodules     = false
+python         = "python3"
+locked-deps    = true
+vendor         = true
+sanitizers     = false
+profiler       = false
+full-bootstrap = false
+
+[install]
+prefix = "/usr"
+
+[rust]
+channel          = "stable"
+rpath            = false
+codegen-units    = 1
+debuginfo-level  = 0
+debug            = false
+backtrace        = false
+jemalloc         = false
+debug-assertions = false
+codegen-tests    = false
+
+[target.i686-unknown-linux-musl]
+llvm-config = "/usr/bin/llvm-config"
+crt-static  = false
+EOF
+
+export DESTDIR="$1"
+export CFLAGS="$CFLAGS -fno-stack-protector" \
+       LD_LIBRARY_PATH="$PWD/lib"
+
+python3 ./x.py build -j "$(nproc)"
+python3 ./x.py install
+
+rm -rf "$1/usr/lib/rustlib/src/"
+rm -f  "$1/usr/lib/rustlib/uninstall.sh"
